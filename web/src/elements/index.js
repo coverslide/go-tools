@@ -6,5 +6,6 @@ import "./AppHeader";
 import "./ErrorBox";
 import "./ErrorRow";
 import "./JsonTool";
+import "./PortScanTool";
 import "./TimeStampTool";
 import "./TimerTool";

@@ -32,6 +32,7 @@ CustomElement.register(
 <app-route route="/timer" title="Timer Tool"><timer-tool></timer-tool></app-route>
 <app-route route="/timestamp" title="Timestamp Tool"><timestamp-tool></timestamp-tool></app-route>
 <app-route route="/json" title="Json Tool"><json-tool></json-tool></app-route>
+<app-route route="/portscan" title="Json Tool"><portscan-tool></portscan-tool></app-route>
 `,
 );
 
