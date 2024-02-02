@@ -16,9 +16,23 @@ class AppRouter extends CustomElement {
   }
 
   updateRoutes (newRoute: string): void {
+    let foundRoute = false;
+    let defaultRoute = null;
     for (const route of this.querySelectorAll("app-route")) {
+      const routePath = route.getAttribute("route");
+      if (routePath === newRoute) {
+        foundRoute = true;
+      }
+      if (routePath === "") {
+        defaultRoute = route;
+      }
       route.dispatchEvent(
         new CustomEvent("update-route", { detail: newRoute }),
+      );
+    }
+    if (!foundRoute && defaultRoute != null) {
+      defaultRoute.dispatchEvent(
+        new CustomEvent("update-route", { detail: "" }),
       );
     }
   }
@@ -33,6 +47,8 @@ CustomElement.register(
 <app-route route="/timestamp" title="Timestamp Tool"><timestamp-tool></timestamp-tool></app-route>
 <app-route route="/json" title="Json Tool"><json-tool></json-tool></app-route>
 <app-route route="/portscan" title="Json Tool"><portscan-tool></portscan-tool></app-route>
+<app-route route="/request" title="Request Tool"><request-tool/></app-route>
+<app-route route="" title="Tools"><app-menu/></app-route>
 `,
 );
 
