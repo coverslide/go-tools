@@ -17,6 +17,8 @@ CustomElement.register(
   <li><a route href="/json">Json Tool</a></li>
   <li><a route href="/timestamp">Timestamp Tool</a></li>
   <li><a route href="/timer">Timer Tool</a></li>
+  <li><a route href="/portscan">Port Scan Tool</a></li>
+  <li><a route href="/request">Request Tool</a></li>
 </ul>
 `,
 );
