@@ -1,4 +1,5 @@
 import CustomElement from "@cover-slide/customelement";
+import { type ProxyResponse } from "../types/response";
 
 class PortScanTool extends CustomElement {
   connectedCallback (): void {
@@ -22,7 +23,7 @@ class PortScanTool extends CustomElement {
         };
         fetch(new Request("/api/portscan", requestInit))
           .then(async response => await response.json())
-          .then(responseData => {
+          .then((responseData: ProxyResponse) => {
             if (responseData.success) {
               output.textContent = "OK";
             } else {

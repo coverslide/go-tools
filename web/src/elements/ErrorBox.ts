@@ -1,8 +1,8 @@
 import CustomElement from "@cover-slide/customelement";
 
 class ErrorBox extends CustomElement {
-  constructor () {
-    super();
+  connectedCallback (): void {
+    super.connectedCallback();
     this.addEventListener("click", (event: MouseEvent) => {
       event.preventDefault();
       const target = event.target! as HTMLSpanElement;

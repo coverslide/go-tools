@@ -3,6 +3,7 @@ import "./AppRouter";
 import "./AppRoute";
 import "./AppMenu";
 import "./AppHeader";
+import "./Base64Tool";
 import "./ErrorBox";
 import "./ErrorRow";
 import "./JsonTool";

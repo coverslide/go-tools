@@ -2,33 +2,31 @@ import CustomElement from "@cover-slide/customelement";
 
 const PROXY_API_URL = "/api/httprequest";
 
-interface HeaderDictionary {
-  [key: string]: string[],
-}
+type HeaderDictionary = Record<string, string[]>;
 
-type HttpRequest = {
-  method :string,
-  url    :string,
-  body   :string,
-  headers : HeaderDictionary,
-}
-type HttpResponse = {
-  success      :boolean,
-  errorMessage :string,
-  statusCode :number,
-  body       :string,
-  headers    :HeaderDictionary,
-}
+interface HttpRequest {
+  method: string
+  url: string
+  body: string
+  headers: HeaderDictionary
+};
+interface HttpResponse {
+  success: boolean
+  errorMessage: string
+  statusCode: number
+  body: string
+  headers: HeaderDictionary
+};
 
 class RequestTool extends CustomElement {
-  output? :HTMLPreElement;
-  outputHeaders? :HTMLPreElement;
-  
+  output?: HTMLPreElement;
+  outputHeaders?: HTMLPreElement;
+
   connectedCallback (): void {
     super.connectedCallback();
 
     const form: HTMLFormElement = this.querySelector("form.request-form")!;
-    const output: HTMLPreElement = this.output = this.querySelector("pre.output")!;
+    const output: HTMLPreElement = this.output = this.querySelector("pre.output.body")!;
     const outputHeaders: HTMLPreElement = this.outputHeaders = this.querySelector("pre.output.headers")!;
 
     form.addEventListener("submit", (event: SubmitEvent) => {
@@ -45,12 +43,12 @@ class RequestTool extends CustomElement {
         const method = methodInput.value;
         const body = bodyInput.value;
         const url = urlInput.value;
-        const headers: HeaderDictionary = headersInput.value.trim().split(/[\r\n]+/).reduce((currentHeaders, line) => {
-          if (line.match(/^\s*$/)) {
+        const headers: HeaderDictionary = headersInput.value.trim().split(/[\r\n]+/).reduce<HeaderDictionary>((currentHeaders, line) => {
+          if (line.match(/^\s*$/) !== null) {
             return currentHeaders;
           }
           const pair = line.split(/\s*:\s*/, 2);
-          if (pair.length != 2) {
+          if (pair.length !== 2) {
             throw new Error(`Invalid header line: "${line}"`);
           }
           if (!(pair[0] in currentHeaders)) {
@@ -58,75 +56,87 @@ class RequestTool extends CustomElement {
           }
           currentHeaders[pair[0]].push(pair[1]);
           return currentHeaders;
-        }, {} as HeaderDictionary);
+        }, {});
 
         if (proxyInput.checked) {
-          this.fetchProxy(method, url, body, headers);
+          void this.fetchProxy(method, url, body, headers);
         } else {
-          this.fetchDirect(method, url, body, headers);
+          void this.fetchDirect(method, url, body, headers);
         }
-      } catch(e) {
+      } catch (e) {
         this.querySelector("error-box")!.dispatchEvent(new CustomEvent<string>("app-error", { detail: (e as Error).message }));
       }
     });
   }
-      
-      async fetchProxy(method :string, url  :string, body :string, headers :HeaderDictionary){
-        const bodyData :HttpRequest = {
-          method,
-          url,
-          body,
-          headers,
-        }
-        const requestInit: RequestInit = {
-          method: "POST",
-          body: JSON.stringify(bodyData),
-        };
-        try {
-          const response = await fetch(new Request(PROXY_API_URL, requestInit));
-          const responseData :HttpResponse = await response.json();
-          const headerOutput: string[] = [`statusCode: ${responseData.statusCode}`];
-          for (let key in responseData.headers) {
-            const field = responseData.headers[key];
-            for (let value of field) {
-              headerOutput.push(`${key}: ${value}`);
-            }
-          }
 
-          this.outputHeaders!.textContent = headerOutput.join("\n");
-          this.output!.textContent = body;
-        } catch (e) {
-          this.querySelector("error-box")!.dispatchEvent(new CustomEvent<string>("app-error", { detail: (e as Error).message }));
+  async fetchProxy (method: string, url: string, body: string, headers: HeaderDictionary): Promise<void> {
+    const bodyData: HttpRequest = {
+      method,
+      url,
+      body,
+      headers,
+    };
+    const requestInit: RequestInit = {
+      method: "POST",
+      body: JSON.stringify(bodyData),
+    };
+    try {
+      const response = await fetch(new Request(PROXY_API_URL, requestInit));
+      const responseData: HttpResponse = await response.json();
+      const headerOutput: string[] = [`statusCode: ${responseData.statusCode}`];
+      let contentType: string | null = null;
+      for (const key in responseData.headers) {
+        const field = responseData.headers[key];
+        for (const value of field) {
+          headerOutput.push(`${key}: ${value}`);
+          if (key.toLowerCase() === "content-type") {
+            contentType = value;
+          }
         }
       }
-      
-      async fetchDirect(method :string, url  :string, body :BodyInit, headers :HeaderDictionary){
-        const headerInit :Headers = Object.entries(headers).reduce((currentHeaders, [key, values]) => {
-          values.forEach(value => {
-            currentHeaders.append(key, value);
-          });
-          return currentHeaders;
-        }, new Headers());
-        const requestInit: RequestInit = {
-          method,
-          headers: headerInit
-        };
-        if (body != "") {
-          requestInit.body = body;
-        }
-        try {
-          const response = await fetch(new Request(url, requestInit));
-          const headerOutput: string[] = [response.statusText];
-          response.headers.forEach(header => {
-            headerOutput.push(header);
-          });
 
-          this.outputHeaders!.textContent = headerOutput.join("\n");
-          this.output!.textContent = await response.text();
-        } catch (e) {
-          this.querySelector("error-box")!.dispatchEvent(new CustomEvent<string>("app-error", { detail: (e as Error).message }));
-        }
+      this.outputHeaders!.textContent = headerOutput.join("\n");
+      this.handleBody(contentType, responseData.body);
+    } catch (e) {
+      this.querySelector("error-box")!.dispatchEvent(new CustomEvent<string>("app-error", { detail: (e as Error).message }));
     }
+  }
+
+  handleBody (contentType: string | null, body: string): void {
+    // TODO: handle images, json, etc.
+    if (contentType === null) {
+      this.output!.textContent = atob(body);
+    }
+    this.output!.textContent = atob(body);
+  }
+
+  async fetchDirect (method: string, url: string, body: BodyInit, headers: HeaderDictionary): Promise<void> {
+    const headerInit: Headers = Object.entries(headers).reduce((currentHeaders, [key, values]) => {
+      values.forEach(value => {
+        currentHeaders.append(key, value);
+      });
+      return currentHeaders;
+    }, new Headers());
+    const requestInit: RequestInit = {
+      method,
+      headers: headerInit
+    };
+    if (body !== "") {
+      requestInit.body = body;
+    }
+    try {
+      const response = await fetch(new Request(url, requestInit));
+      const headerOutput: string[] = [response.statusText];
+      response.headers.forEach(header => {
+        headerOutput.push(header);
+      });
+
+      this.outputHeaders!.textContent = headerOutput.join("\n");
+      this.output!.textContent = await response.text();
+    } catch (e) {
+      this.querySelector("error-box")!.dispatchEvent(new CustomEvent<string>("app-error", { detail: (e as Error).message }));
+    }
+  }
 }
 
 CustomElement.register(
@@ -157,8 +167,7 @@ CustomElement.register(
 </form>
 <hr />
 <pre class="output headers"></pre>
-
-<pre class="output"></pre>
+<pre class="output body"></pre>
 `,
 );
 

@@ -44,6 +44,7 @@ CustomElement.register(
   `
 <app-route route="/" title="Tools"><app-menu></app-menu></app-route>
 <app-route route="/timer" title="Timer Tool"><timer-tool></timer-tool></app-route>
+<app-route route="/base64" title="Base64 Tool"><base64-tool></base64-tool></app-route>
 <app-route route="/timestamp" title="Timestamp Tool"><timestamp-tool></timestamp-tool></app-route>
 <app-route route="/json" title="Json Tool"><json-tool></json-tool></app-route>
 <app-route route="/portscan" title="Json Tool"><portscan-tool></portscan-tool></app-route>
