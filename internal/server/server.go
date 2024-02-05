@@ -4,9 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/fs"
-	"net"
 	"net/http"
-	"time"
 	"tools/internal/config"
 	"tools/web"
 
@@ -49,25 +47,6 @@ type requestWrapper[K any] struct {
 	r       *http.Request
 }
 
-type GenericResponse struct {
-	Success bool `json:"success"`
-}
-
-type ErrorResponse struct {
-	Success      bool   `json:"success"`
-	ErrorMessage string `json:"errorMessage"`
-}
-
-type PortScanRequest struct {
-	Host string `json:"host"`
-	Port int    `json:"port"`
-}
-
-type PortScanResponse struct {
-	Success    bool   `json:"success"`
-	PortStatus string `json:"portStatus"`
-}
-
 func JsonMethod[Req any, Res any](handler func(requestWrapper[Req]) (Res, error)) func(http.ResponseWriter, *http.Request) {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var req Req
@@ -91,39 +70,6 @@ func JsonMethod[Req any, Res any](handler func(requestWrapper[Req]) (Res, error)
 			json.NewEncoder(w).Encode(ErrorResponse{ErrorMessage: err.Error()})
 			return
 		}
-	}
-}
-
-func (a *AppServer) HealthCheck(req requestWrapper[NullType]) (g GenericResponse, err error) {
-	g.Success = true
-	return g, err
-}
-
-func (a *AppServer) PortScan(req requestWrapper[PortScanRequest]) (r PortScanResponse, err error) {
-	waitChan := time.After(time.Second * 1)
-	errChan := make(chan error, 1)
-	okChan := make(chan struct{}, 1)
-
-	addr := fmt.Sprintf("%s:%d", req.payload.Host, req.payload.Port)
-
-	go func() {
-		_, err := net.Dial("tcp", addr)
-		if err != nil {
-			errChan <- err
-			return
-		}
-		okChan <- struct{}{}
-	}()
-
-	select {
-	case <-waitChan:
-		return r, fmt.Errorf("timed out")
-	case err := <-errChan:
-		return r, fmt.Errorf("net error: %w", err)
-	case <-okChan:
-		r.PortStatus = "OK"
-		r.Success = true
-		return r, err
 	}
 }
 
@@ -206,6 +152,7 @@ func NewServer(conf config.Config) *AppServer {
 
 	appMux.HandleFunc("/api/healthcheck", JsonMethod(appServer.HealthCheck))
 	appMux.HandleFunc("/api/portscan", JsonMethod(appServer.PortScan))
+	appMux.HandleFunc("/api/httprequest", JsonMethod(appServer.HttpRequest))
 
 	httpServer := &http.Server{
 		Handler: appMux,
