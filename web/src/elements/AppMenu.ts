@@ -20,6 +20,7 @@ CustomElement.register(
   <li><a route href="/timer">Timer Tool</a></li>
   <li><a route href="/portscan">Port Scan Tool</a></li>
   <li><a route href="/request">Request Tool</a></li>
+  <li><a route href="/qrcode">QR Code Tool</a></li>
 </ul>
 `,
 );

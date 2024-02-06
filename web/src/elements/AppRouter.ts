@@ -48,6 +48,7 @@ CustomElement.register(
 <app-route route="/timestamp" title="Timestamp Tool"><timestamp-tool></timestamp-tool></app-route>
 <app-route route="/json" title="Json Tool"><json-tool></json-tool></app-route>
 <app-route route="/portscan" title="Json Tool"><portscan-tool></portscan-tool></app-route>
+<app-route route="/qrcode" title="QR Code Tool"><qrcode-tool/></app-route>
 <app-route route="/request" title="Request Tool"><request-tool/></app-route>
 <app-route route="" title="Tools"><app-menu/></app-route>
 `,

@@ -9,10 +9,11 @@
     "lint": "eslint src/**/*.ts test/**/*.ts",
     "fix": "eslint src/**/*.ts test/**/*.ts --fix",
     "preview": "vite preview",
-    "test":"jest"
+    "test": "jest"
   },
   "devDependencies": {
     "@types/jest": "^29.5.11",
+    "@types/qrcode": "^1.5.5",
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@typescript-eslint/parser": "^6.20.0",
     "eslint": "^8.56.0",
@@ -28,6 +29,7 @@
   },
   "dependencies": {
     "@cover-slide/customelement": "^2.0.1",
+    "qrcode": "^1.5.3",
     "sakura.css": "^1.5.0"
   }
 }
