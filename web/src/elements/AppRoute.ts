@@ -1,15 +1,19 @@
 import CustomElement from "@cover-slide/customelement";
 
 class AppRoute extends CustomElement {
-  watchedSlot?: HTMLSlotElement;
   childContent: DocumentFragment;
   active: boolean = false;
   constructor () {
     super();
     this.childContent = new DocumentFragment();
-    for (const child of this.children) {
-      this.childContent.appendChild(child.cloneNode(true));
+
+    const childrenToRemove = [];
+    for (const child of this.childNodes) {
+      childrenToRemove.push(child);
+    }
+    for (const child of childrenToRemove) {
       this.removeChild(child);
+      this.childContent.appendChild(child);
     }
   }
 
@@ -24,6 +28,7 @@ class AppRoute extends CustomElement {
       }
       if (!this.active) {
         this.active = true;
+        console.log(route, this.childContent)
         this.appendChild(this.childContent.cloneNode(true));
         if (this.hasAttribute("title")) {
           document.title = this.getAttribute("title")!;
