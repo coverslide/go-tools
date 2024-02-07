@@ -7,8 +7,7 @@ CustomElement.register(
   MainApp,
   "main-app",
   `
-<app-router></app-router>
-<app-modal></app-modal>`,
+<app-router></app-router>`,
 );
 
 export default MainApp;
