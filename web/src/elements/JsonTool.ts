@@ -22,8 +22,9 @@ class JsonTool extends CustomElement {
 CustomElement.register(
   JsonTool,
   "json-tool",
+  /* html */
   `
-<app-header></app-header>
+<main-header></main-header>
 <error-box></error-box>
 <form class="json-form">
     <textarea class="json"></textarea>

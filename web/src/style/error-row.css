@@ -1,0 +1,13 @@
+error-row {
+    display: block;
+    position: relative;
+}
+
+error-row .dismiss {
+    display: block;
+    position: absolute;
+    right: 0;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+}

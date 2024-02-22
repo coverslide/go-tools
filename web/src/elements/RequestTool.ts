@@ -142,8 +142,9 @@ class RequestTool extends CustomElement {
 CustomElement.register(
   RequestTool,
   "request-tool",
+  /* html */
   `
-<app-header></app-header>
+<main-header></main-header>
 <error-box></error-box>
 <form class="request-form">
     <section>

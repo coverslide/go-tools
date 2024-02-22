@@ -10,7 +10,8 @@ class AppMenu extends CustomElement {
 
 CustomElement.register(
   AppMenu,
-  "app-menu",
+  "main-menu",
+  /* html */
   `
 <ul>
   <li><a route href="/">Home</a></li>
@@ -18,6 +19,7 @@ CustomElement.register(
   <li><a route href="/base64">Base64 Tool</a></li>
   <li><a route href="/timestamp">Timestamp Tool</a></li>
   <li><a route href="/timer">Timer Tool</a></li>
+  <li><a route href="/stopwatch">Stopwatch Tool</a></li>
   <li><a route href="/portscan">Port Scan Tool</a></li>
   <li><a route href="/request">Request Tool</a></li>
   <li><a route href="/qrcode">QR Code Tool</a></li>

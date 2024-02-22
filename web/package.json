@@ -28,7 +28,7 @@
     "vite": "^5.0.8"
   },
   "dependencies": {
-    "@cover-slide/customelement": "^2.0.1",
+    "@cover-slide/customelement": "^2.2.1",
     "qrcode": "^1.5.3",
     "sakura.css": "^1.5.0"
   }

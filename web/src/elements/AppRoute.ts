@@ -19,8 +19,9 @@ class AppRoute extends CustomElement {
 
   connectedCallback (): void {
     this.innerHTML = "";
-    const route = this.getAttribute("route");
     this.addEventListener("update-route", ((event: CustomEvent<string>) => {
+      const route = this.getAttribute("route");
+      console.log("route:", route, "event.detail", event.detail);
       if (event.detail !== route) {
         this.active = false;
         this.innerHTML = "";
@@ -28,16 +29,18 @@ class AppRoute extends CustomElement {
       }
       if (!this.active) {
         this.active = true;
-        console.log(route, this.childContent)
+        console.log(route, this.childContent);
         this.appendChild(this.childContent.cloneNode(true));
         if (this.hasAttribute("title")) {
           document.title = this.getAttribute("title")!;
         }
       }
     }) as EventListener);
+
+    this.dispatchEvent(new CustomEvent("route-ready", { detail: this.getAttribute("route"), bubbles: true }));
   }
 }
 
-CustomElement.register(AppRoute, "app-route", "");
+CustomElement.register(AppRoute, "app-route");
 
 export default AppRoute;

@@ -14,11 +14,6 @@ type GenericResponse struct {
 	Success bool `json:"success"`
 }
 
-type ErrorResponse struct {
-	Success      bool   `json:"success"`
-	ErrorMessage string `json:"errorMessage"`
-}
-
 type PortScanRequest struct {
 	Host string `json:"host"`
 	Port int    `json:"port"`

@@ -10,7 +10,8 @@ class AppHeader extends CustomElement {
 
 CustomElement.register(
   AppHeader,
-  "app-header",
+  "main-header",
+  /* html */
   `
 <div>
   <a route href="/">Home</a>

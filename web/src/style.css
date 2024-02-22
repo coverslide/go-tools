@@ -1,13 +1,8 @@
-error-row {
-    display: block;
-    position: relative;
+body {
+    max-width: 76em;
 }
 
-error-row .dismiss {
-    display: block;
-    position: absolute;
-    right: 0;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
+timer-tool .timer input {
+    width: 4em;
+    text-align: right;
 }

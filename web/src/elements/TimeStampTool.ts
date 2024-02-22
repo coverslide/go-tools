@@ -12,10 +12,10 @@ class TimestampTool extends CustomElement {
   mode: Mode = Mode.Millis;
   connectedCallback (): void {
     super.connectedCallback();
-    this.timestampInput = this.querySelector("input.timestamp")!;
-    this.pauseButton = this.querySelector("button.pause")!;
-    const enterForm = this.querySelector("form.enter-form")!;
-    const errorBox = this.querySelector("error-box")!;
+    this.timestampInput = this.root.querySelector("input.timestamp")!;
+    this.pauseButton = this.root.querySelector("button.pause")!;
+    const enterForm = this.root.querySelector("form.enter-form")!;
+    const errorBox = this.root.querySelector("error-box")!;
 
     this.pauseButton.addEventListener("click", (_) => {
       if (this.paused) {
@@ -72,19 +72,20 @@ class TimestampTool extends CustomElement {
   }
 
   updateTicker (timestamp: number): void {
-    this.querySelector("pre.timestamp-output")!.textContent = (this.mode === Mode.Millis ? timestamp : Math.floor(timestamp / 1000)).toString(10);
-    this.querySelector("dd.iso-date")!.textContent = new Date(timestamp).toISOString();
-    this.querySelector("dd.rfc-date")!.textContent = new Date(timestamp).toString();
-    this.querySelector("dd.locale-date")!.textContent = new Date(timestamp).toLocaleString();
+    this.root.querySelector("pre.timestamp-output")!.textContent = (this.mode === Mode.Millis ? timestamp : Math.floor(timestamp / 1000)).toString(10);
+    this.root.querySelector("dd.rfc-date")!.textContent = new Date(timestamp).toString();
+    this.root.querySelector("dd.locale-date")!.textContent = new Date(timestamp).toLocaleString();
+    this.root.querySelector("dd.iso-date")!.textContent = new Date(timestamp).toISOString();
   }
 }
 
 CustomElement.register(
   TimestampTool,
   "timestamp-tool",
+  /* html */
   `
+<main-header></main-header>
 <error-box></error-box>
-<app-header></app-header>
 <section>
   <pre class="timestamp-output"></pre>
   <button class="pause">Pause</button>

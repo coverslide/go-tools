@@ -41,6 +41,11 @@ func (n *NullType) UnmarshalJSON(ignored []byte) error {
 	return nil
 }
 
+type ErrorResponse struct {
+	Success      bool   `json:"success"`
+	ErrorMessage string `json:"errorMessage"`
+}
+
 type requestWrapper[K any] struct {
 	payload K
 	w       http.ResponseWriter

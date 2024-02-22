@@ -43,8 +43,9 @@ class PortScanTool extends CustomElement {
 CustomElement.register(
   PortScanTool,
   "portscan-tool",
+  /* html */
   `
-<app-header></app-header>
+<main-header></main-header>
 <error-box></error-box>
 <form class="portscan-form">
     <input placeholder="host" name="host" type="text" />

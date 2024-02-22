@@ -10,6 +10,10 @@ class AppRouter extends CustomElement {
       this.updateRoutes(event.detail);
     }) as EventListener);
 
+    this.addEventListener("route-ready", ((event: CustomEvent<string>) => {
+      this.updateRoutes(window.location.pathname);
+    }) as EventListener);
+
     window.addEventListener("popstate", (_: PopStateEvent) => {
       this.updateRoutes(window.location.pathname);
     });
@@ -31,6 +35,7 @@ class AppRouter extends CustomElement {
       );
     }
     if (!foundRoute && defaultRoute != null) {
+      console.log("default");
       defaultRoute.dispatchEvent(
         new CustomEvent("update-route", { detail: "" }),
       );
@@ -40,18 +45,7 @@ class AppRouter extends CustomElement {
 
 CustomElement.register(
   AppRouter,
-  "app-router",
-  `
-<app-route route="/" title="Tools"><app-menu></app-menu></app-route>
-<app-route route="/timer" title="Timer Tool"><timer-tool></timer-tool></app-route>
-<app-route route="/base64" title="Base64 Tool"><base64-tool></base64-tool></app-route>
-<app-route route="/timestamp" title="Timestamp Tool"><timestamp-tool></timestamp-tool></app-route>
-<app-route route="/json" title="Json Tool"><json-tool></json-tool></app-route>
-<app-route route="/portscan" title="Json Tool"><portscan-tool></portscan-tool></app-route>
-<app-route route="/request" title="Request Tool"><request-tool/></request-tool></app-route>
-<app-route route="/qrcode" title="QR Code Tool"><qrcode-tool></qrcode-tool></app-route>
-<app-route route="" title="Tools"><app-menu></app-menu></app-route>
-`,
+  "app-router"
 );
 
 export default AppRouter;

@@ -10,23 +10,37 @@ class Base64Tool extends CustomElement {
     form.addEventListener("submit", (event: SubmitEvent) => {
       event.preventDefault();
       const submitter = event.submitter as HTMLInputElement;
-      try {
-        const inputValue = textInput.value;
-        if (submitter.getAttribute("name") === "convert-from") {
-          output.textContent = atob(inputValue);
-        } else {
-          output.textContent = btoa(inputValue);
-        }
-      } catch (e) {
-        this.querySelector("error-box")!.dispatchEvent(new CustomEvent<string>("app-error", { detail: (e as Error).message }));
-      }
+      const convertFrom = submitter.getAttribute("name") === "convert-from";
+      const inputValue = textInput.value;
+      this.convert(convertFrom, inputValue)
+        .then((outputValue: string) => {
+          output.textContent = outputValue;
+        })
+        .catch(e => {
+          this.querySelector("error-box")!.dispatchEvent(new CustomEvent<string>("app-error", { detail: (e as Error).message }));
+        });
     });
+  }
+
+  async convert (convertFrom: boolean, inputValue: string): Promise<string> {
+    if (inputValue.trim() === "" && navigator.clipboard !== undefined) {
+      inputValue = await navigator.clipboard.readText();
+    }
+    if (convertFrom) {
+      return atob(inputValue);
+    } else {
+      return btoa(inputValue);
+    }
   }
 }
 
-CustomElement.register(Base64Tool, "base64-tool", `
+CustomElement.register(
+  Base64Tool,
+  "base64-tool",
+  /* html */
+  `
 
-<app-header></app-header>
+<main-header></main-header>
 <error-box></error-box>
 <form class="base64-form">
     <section><textarea name="text" placeholder="Enter text"></textarea></section>

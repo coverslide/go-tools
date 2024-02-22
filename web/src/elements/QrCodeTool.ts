@@ -27,8 +27,9 @@ class QrCodeTool extends CustomElement {
 CustomElement.register(
   QrCodeTool,
   "qrcode-tool",
+  /* html */
   `
-<app-header></app-header>
+<main-header></main-header>
 <error-box></error-box>
 <form name="qr-form">
     <textarea name="input" placeholder="Enter text"></textarea>
