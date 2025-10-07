@@ -10,7 +10,7 @@ class AppRouter extends CustomElement {
       this.updateRoutes(event.detail);
     }) as EventListener);
 
-    this.addEventListener("route-ready", ((event: CustomEvent<string>) => {
+    this.addEventListener("route-ready", ((_event: CustomEvent<string>) => {
       this.updateRoutes(window.location.pathname);
     }) as EventListener);
 
