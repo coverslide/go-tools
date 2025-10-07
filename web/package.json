@@ -4,8 +4,9 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --host ::",
-    "build": "tsc && vite build",
+    "prepare-jq-wasm": "mkdir -p public && cp node_modules/jq-wasm/dist/jq.wasm public/jq.wasm || true",
+    "dev": "npm run prepare-jq-wasm && vite --host ::",
+    "build": "npm run prepare-jq-wasm && tsc && vite build",
     "lint": "eslint src/**/*.ts test/**/*.ts",
     "fix": "eslint src/**/*.ts test/**/*.ts --fix",
     "preview": "vite preview",
@@ -14,6 +15,7 @@
   "devDependencies": {
     "@types/jest": "^29.5.11",
     "@types/qrcode": "^1.5.5",
+    "@types/uuid": "^10.0.0",
     "@typescript-eslint/eslint-plugin": "^6.20.0",
     "@typescript-eslint/parser": "^6.20.0",
     "eslint": "^8.56.0",
@@ -29,7 +31,9 @@
   },
   "dependencies": {
     "@cover-slide/customelement": "^2.2.1",
+    "jq-wasm": "^1.1.0-jq-1.8.1",
     "qrcode": "^1.5.3",
-    "sakura.css": "^1.5.0"
+    "sakura.css": "^1.5.0",
+    "uuid": "^13.0.0"
   }
 }

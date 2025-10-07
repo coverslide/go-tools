@@ -12,5 +12,6 @@ import "./PortScanTool";
 import "./QrCodeTool";
 import "./RequestTool";
 import "./TimerTool";
-import "./TimeStampTool";
+import "./UuidGeneratorTool";
+import "./JqTool";
 import "./StopwatchTool";

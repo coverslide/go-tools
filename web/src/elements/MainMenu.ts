@@ -23,6 +23,8 @@ CustomElement.register(
   <li><a route href="/portscan">Port Scan Tool</a></li>
   <li><a route href="/request">Request Tool</a></li>
   <li><a route href="/qrcode">QR Code Tool</a></li>
+  <li><a route href="/uuid">UUID Generator</a></li>
+  <li><a route href="/jq">JQ Tool</a></li>
 </ul>
 `,
 );

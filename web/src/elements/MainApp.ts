@@ -18,6 +18,8 @@ CustomElement.register(
   <app-route route="/portscan" title="Json Tool"><portscan-tool></portscan-tool></app-route>
   <app-route route="/request" title="Request Tool"><request-tool/></request-tool></app-route>
   <app-route route="/qrcode" title="QR Code Tool"><qrcode-tool></qrcode-tool></app-route>
+  <app-route route="/uuid" title="UUID Generator"><uuid-generator-tool></uuid-generator-tool></app-route>
+  <app-route route="/jq" title="JQ Tool"><jq-tool></jq-tool></app-route>
   <app-route route="" title="Tools"><app-redirect path="/"></app-redirect></app-route>
 </app-router>`,
 );
