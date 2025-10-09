@@ -14,12 +14,11 @@ CustomElement.register(
   <app-route route="/stopwatch" title="Stopwatch Tool"><stopwatch-tool></stopwatch-tool></app-route>
   <app-route route="/base64" title="Base64 Tool"><base64-tool></base64-tool></app-route>
   <app-route route="/timestamp" title="Timestamp Tool"><timestamp-tool></timestamp-tool></app-route>
-  <app-route route="/json" title="Json Tool"><json-tool></json-tool></app-route>
-  <app-route route="/portscan" title="Json Tool"><portscan-tool></portscan-tool></app-route>
+  <app-route route="/json" title="JSON Tool"><json-tool></json-tool></app-route>
+  <app-route route="/portscan" title="Portscan Tool"><portscan-tool></portscan-tool></app-route>
   <app-route route="/request" title="Request Tool"><request-tool/></request-tool></app-route>
   <app-route route="/qrcode" title="QR Code Tool"><qrcode-tool></qrcode-tool></app-route>
   <app-route route="/uuid" title="UUID Generator"><uuid-generator-tool></uuid-generator-tool></app-route>
-  <app-route route="/jq" title="JQ Tool"><jq-tool></jq-tool></app-route>
   <app-route route="" title="Tools"><app-redirect path="/"></app-redirect></app-route>
 </app-router>`,
 );

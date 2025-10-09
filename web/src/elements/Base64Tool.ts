@@ -39,7 +39,18 @@ CustomElement.register(
   "base64-tool",
   /* html */
   `
-
+<style>
+    .base64-form textarea {
+        width: 100%;
+        height: 400px;
+    }
+    .output {
+        white-space: pre-wrap;
+        width: 100%;
+        height: 400px;
+        border: 1px solid;
+    }
+</style>
 <main-header></main-header>
 <error-box></error-box>
 <form class="base64-form">

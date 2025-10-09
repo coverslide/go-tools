@@ -15,7 +15,7 @@ CustomElement.register(
   `
 <ul>
   <li><a route href="/">Home</a></li>
-  <li><a route href="/json">Json Tool</a></li>
+  <li><a route href="/json">JSON Tool</a></li>
   <li><a route href="/base64">Base64 Tool</a></li>
   <li><a route href="/timestamp">Timestamp Tool</a></li>
   <li><a route href="/timer">Timer Tool</a></li>
@@ -24,7 +24,6 @@ CustomElement.register(
   <li><a route href="/request">Request Tool</a></li>
   <li><a route href="/qrcode">QR Code Tool</a></li>
   <li><a route href="/uuid">UUID Generator</a></li>
-  <li><a route href="/jq">JQ Tool</a></li>
 </ul>
 `,
 );
