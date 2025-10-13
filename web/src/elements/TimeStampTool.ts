@@ -19,7 +19,7 @@ class TimestampTool extends CustomElement {
     this.pauseButton = this.root.querySelector("button.pause")!;
     const enterForm = this.root.querySelector("form.enter-form")!;
     const errorBox = this.root.querySelector("error-box")!;
-    const timezoneSelect = this.root.querySelector("select.timezone-select")!;
+    const timezoneSelect = this.root.querySelector("select.timezone-select")! as HTMLSelectElement;
 
     timezoneSelect.value = localStorage.getItem("timezone") || Intl.DateTimeFormat().resolvedOptions().timeZone;
     this.timezone = timezoneSelect.value;
