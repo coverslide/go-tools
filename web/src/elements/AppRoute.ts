@@ -21,7 +21,6 @@ class AppRoute extends CustomElement {
     this.innerHTML = "";
     this.addEventListener("update-route", ((event: CustomEvent<string>) => {
       const route = this.getAttribute("route");
-      console.log("route:", route, "event.detail", event.detail);
       if (event.detail !== route) {
         this.active = false;
         this.innerHTML = "";
