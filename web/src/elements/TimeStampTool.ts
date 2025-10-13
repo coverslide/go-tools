@@ -41,9 +41,13 @@ class TimestampTool extends CustomElement {
     enterForm.addEventListener("submit", ((event: SubmitEvent) => {
       event.preventDefault();
       const timestampInput: HTMLInputElement = enterForm.querySelector("input.timestamp-input")!;
+      const secondsInput: HTMLInputElement = enterForm.querySelector("input.seconds-input")!;
+      const millisecondsInput: HTMLInputElement = enterForm.querySelector("input.milliseconds-input")!;
       const value = timestampInput.value;
+      const seconds = parseInt(secondsInput.value, 10);
+      const milliseconds = parseInt(millisecondsInput.value, 10);
       try {
-        const timestampValue = new Date(value).getTime();
+        const timestampValue = new Date(value).getTime() + (seconds * 1000) + milliseconds;
         if (isNaN(timestampValue)) {
           throw new Error("invalid timestamp value");
         }
@@ -71,8 +75,38 @@ class TimestampTool extends CustomElement {
       }
     }) as EventListener);
 
+    const secondsInput: HTMLInputElement = this.root.querySelector("input.seconds-input")!;
+    secondsInput.addEventListener("input", () => { this.updateTimestampFromInputs(); });
+
+    const millisecondsInput: HTMLInputElement = this.root.querySelector("input.milliseconds-input")!;
+    millisecondsInput.addEventListener("input", () => { this.updateTimestampFromInputs(); });
+
+    const timestampInput: HTMLInputElement = this.root.querySelector("input.timestamp-input")!;
+    timestampInput.addEventListener("input", () => { this.updateTimestampFromInputs(); });
+
     this.timerId = window.setInterval(() => { this.updateTimestamp(); }, 1000);
     this.updateTimestamp();
+  }
+
+  updateTimestampFromInputs (): void {
+    const timestampInput: HTMLInputElement = this.root.querySelector("input.timestamp-input")!;
+    const secondsInput: HTMLInputElement = this.root.querySelector("input.seconds-input")!;
+    const millisecondsInput: HTMLInputElement = this.root.querySelector("input.milliseconds-input")!;
+
+    const value = timestampInput.value;
+    const seconds = parseInt(secondsInput.value, 10) || 0;
+    const milliseconds = parseInt(millisecondsInput.value, 10) || 0;
+
+    try {
+      const timestampValue = new Date(value).getTime() + (seconds * 1000) + milliseconds;
+      if (isNaN(timestampValue)) {
+        return;
+      }
+      this.updateTicker(timestampValue);
+      this.pause();
+    } catch (error) {
+      // ignore
+    }
   }
 
   disconnectedCallback (): void {
@@ -108,27 +142,39 @@ class TimestampTool extends CustomElement {
     this.root.querySelector("pre.timestamp-output")!.textContent = (this.mode === Mode.Millis ? timestamp : Math.floor(timestamp / 1000)).toString(10);
     const date = new Date(timestamp);
 
-    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-    const pad = (num: number) => num.toString().padStart(2, "0");
+    const rfc822Formatter = new Intl.DateTimeFormat("en-US", {
+      timeZone: this.timezone,
+      weekday: "short",
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+      timeZoneName: "shortOffset",
+    });
 
-    const day = days[date.getUTCDay()];
-    const dayOfMonth = pad(date.getUTCDate());
-    const month = months[date.getUTCMonth()];
-    const year = date.getUTCFullYear();
-    const hours = pad(date.getUTCHours());
-    const minutes = pad(date.getUTCMinutes());
-    const seconds = pad(date.getUTCSeconds());
+    const parts = rfc822Formatter.formatToParts(date);
+    const rfc822Date = `${parts.find(p => p.type === "weekday")!.value}, ${parts.find(p => p.type === "day")!.value} ${parts.find(p => p.type === "month")!.value} ${parts.find(p => p.type === "year")!.value} ${parts.find(p => p.type === "hour")!.value}:${parts.find(p => p.type === "minute")!.value}:${parts.find(p => p.type === "second")!.value} ${parts.find(p => p.type === "timeZoneName")!.value}`;
 
-    const offset = -date.getTimezoneOffset();
-    const offsetSign = offset >= 0 ? "+" : "-";
-    const offsetHours = pad(Math.floor(Math.abs(offset) / 60));
-    const offsetMinutes = pad(Math.abs(offset) % 60);
-    const timezone = `${offsetSign}${offsetHours}${offsetMinutes}`;
-
-    this.root.querySelector("dd.rfc-date")!.textContent = `${day}, ${dayOfMonth} ${month} ${year} ${hours}:${minutes}:${seconds} ${timezone}`;
+    this.root.querySelector("dd.rfc-date")!.textContent = rfc822Date;
     this.root.querySelector("dd.locale-date")!.textContent = date.toLocaleString(undefined, { timeZone: this.timezone, timeZoneName: "longOffset" });
     this.root.querySelector("dd.iso-date")!.textContent = date.toLocaleString("en-CA", { timeZone: "UTC", hourCycle: "h23" }).replace(",", "").replace(" ", "T") + "Z";
+
+    const timestampInput: HTMLInputElement = this.root.querySelector("input.timestamp-input")!;
+    const secondsInput: HTMLInputElement = this.root.querySelector("input.seconds-input")!;
+    const millisecondsInput: HTMLInputElement = this.root.querySelector("input.milliseconds-input")!;
+
+    const yyyy = date.getFullYear();
+    const mm = (date.getMonth() + 1).toString().padStart(2, "0");
+    const dd = date.getDate().toString().padStart(2, "0");
+    const hh = date.getHours().toString().padStart(2, "0");
+    const mi = date.getMinutes().toString().padStart(2, "0");
+
+    timestampInput.value = `${yyyy}-${mm}-${dd}T${hh}:${mi}`;
+    secondsInput.value = date.getSeconds().toString().padStart(2, "0");
+    millisecondsInput.value = date.getMilliseconds().toString().padStart(3, "0");
   }
 }
 
@@ -165,6 +211,8 @@ CustomElement.register(
 <section>
   <form class="enter-form">
     <input class="timestamp-input" plaseholder="Enter date and time" type="datetime-local" />
+    <input class="seconds-input" placeholder="ss" type="number" min="0" max="59" />
+    <input class="milliseconds-input" placeholder="ms" type="number" min="0" max="999" />
     <input type="submit" />
   </form>
 </section>
