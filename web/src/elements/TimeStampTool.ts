@@ -11,6 +11,8 @@ class TimestampTool extends CustomElement {
   paused: boolean = false;
   mode: Mode = Mode.Millis;
   timezone: string = "UTC";
+  timerId?: number;
+
   connectedCallback (): void {
     super.connectedCallback();
     this.timestampInput = this.root.querySelector("input.timestamp")!;
@@ -69,40 +71,62 @@ class TimestampTool extends CustomElement {
       }
     }) as EventListener);
 
-    this.updateTimestamp(true);
+    this.timerId = window.setInterval(() => { this.updateTimestamp(); }, 1000);
+    this.updateTimestamp();
   }
 
+  disconnectedCallback (): void {
+    if (this.timerId) {
+      window.clearInterval(this.timerId);
+    }
+  }
   pause (): void {
     this.pauseButton!.textContent = "Resume";
     this.paused = true;
+    if (this.timerId) {
+      window.clearInterval(this.timerId);
+    }
   }
 
   resume (): void {
     this.pauseButton!.textContent = "Pause";
     this.paused = false;
-    this.updateTimestamp(false);
+    this.timerId = window.setInterval(() => { this.updateTimestamp(); }, 1000);
   }
 
-  updateTimestamp (allowFixed: boolean): void {
+  updateTimestamp (): void {
     if (!this.isConnected) {
       return;
     }
     if (this.paused) {
       return;
     }
-    let now = Date.now();
-    if (!allowFixed) {
-      now = now - now % 1000;
-    }
-    const toNextMillis = 1000 - (now % 1000);
-    setTimeout(() => { this.updateTimestamp(false); }, toNextMillis);
-    this.updateTicker(now);
+    this.updateTicker(Date.now());
   }
 
   updateTicker (timestamp: number): void {
     this.root.querySelector("pre.timestamp-output")!.textContent = (this.mode === Mode.Millis ? timestamp : Math.floor(timestamp / 1000)).toString(10);
     const date = new Date(timestamp);
-    this.root.querySelector("dd.rfc-date")!.textContent = date.toLocaleString("en-US", { timeZone: this.timezone, timeZoneName: "longOffset" });
+
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    const pad = (num: number) => num.toString().padStart(2, "0");
+
+    const day = days[date.getUTCDay()];
+    const dayOfMonth = pad(date.getUTCDate());
+    const month = months[date.getUTCMonth()];
+    const year = date.getUTCFullYear();
+    const hours = pad(date.getUTCHours());
+    const minutes = pad(date.getUTCMinutes());
+    const seconds = pad(date.getUTCSeconds());
+
+    const offset = -date.getTimezoneOffset();
+    const offsetSign = offset >= 0 ? "+" : "-";
+    const offsetHours = pad(Math.floor(Math.abs(offset) / 60));
+    const offsetMinutes = pad(Math.abs(offset) % 60);
+    const timezone = `${offsetSign}${offsetHours}${offsetMinutes}`;
+
+    this.root.querySelector("dd.rfc-date")!.textContent = `${day}, ${dayOfMonth} ${month} ${year} ${hours}:${minutes}:${seconds} ${timezone}`;
     this.root.querySelector("dd.locale-date")!.textContent = date.toLocaleString(undefined, { timeZone: this.timezone, timeZoneName: "longOffset" });
     this.root.querySelector("dd.iso-date")!.textContent = date.toLocaleString("en-CA", { timeZone: "UTC", hourCycle: "h23" }).replace(",", "").replace(" ", "T") + "Z";
   }
