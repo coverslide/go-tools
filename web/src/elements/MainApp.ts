@@ -19,6 +19,7 @@ CustomElement.register(
   <app-route route="/request" title="Request Tool"><request-tool/></request-tool></app-route>
   <app-route route="/qrcode" title="QR Code Tool"><qrcode-tool></qrcode-tool></app-route>
   <app-route route="/uuid" title="UUID Generator"><uuid-generator-tool></uuid-generator-tool></app-route>
+  <app-route route="/markdown" title="Markdown Tool"><markdown-tool></markdown-tool></app-route>
   <app-route route="" title="Tools"><app-redirect path="/"></app-redirect></app-route>
 </app-router>`,
 );

@@ -15,3 +15,4 @@ import "./StopwatchTool";
 import "./TimerTool";
 import "./TimeStampTool";
 import "./UuidGeneratorTool";
+import "./MarkdownTool";

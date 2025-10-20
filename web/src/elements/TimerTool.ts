@@ -20,23 +20,11 @@ class TimerTool extends CustomElement {
     const minutesInput: HTMLInputElement = this.root.querySelector("input[name=minutes]")!;
     const secondsInput: HTMLInputElement = this.root.querySelector("input[name=seconds]")!;
 
+    this.parseHash();
+
     startBtn.addEventListener("click", (_) => {
       void this.blankAudio.play();
-
-      if (this.started) {
-        return;
-      }
-      this.started = true;
-      if (this.remaining <= 0) {
-        const hours = parseInt(hoursInput.value, 10);
-        const minutes = parseInt(minutesInput.value, 10);
-        const seconds = parseInt(secondsInput.value, 10);
-
-        const total = (seconds * 1000) + (minutes * 60 * 1000) + (hours * 60 * 60 * 1000);
-
-        this.remaining = total;
-      }
-      this.updateDisplay(display, 0);
+      this.startTimerLogic();
     });
     stopBtn.addEventListener("click", (_) => {
       this.started = false;
@@ -45,6 +33,83 @@ class TimerTool extends CustomElement {
       this.resetTimer();
       this.updateDisplay(display, 0);
     });
+  }
+
+  startTimerLogic (): void {
+    if (this.started) {
+      return;
+    }
+    this.started = true;
+    if (this.remaining <= 0) {
+      const hoursInput: HTMLInputElement = this.root.querySelector("input[name=hours]")!;
+      const minutesInput: HTMLInputElement = this.root.querySelector("input[name=minutes]")!;
+      const secondsInput: HTMLInputElement = this.root.querySelector("input[name=seconds]")!;
+
+      const hours = parseInt(hoursInput.value, 10);
+      const minutes = parseInt(minutesInput.value, 10);
+      const seconds = parseInt(secondsInput.value, 10);
+
+      const total = (seconds * 1000) + (minutes * 60 * 1000) + (hours * 60 * 60 * 1000);
+
+      this.remaining = total;
+    }
+    this.updateDisplay(this.root.querySelector(".display")!, 0);
+  }
+
+  parseHash (): void {
+    const hash = window.location.hash.substring(1);
+    if (!hash) {
+      return;
+    }
+
+    const autoStart = hash.endsWith("!");
+    const timeString = autoStart ? hash.substring(0, hash.length - 1) : hash;
+
+    let hours = 0;
+    let minutes = 0;
+    let seconds = 0;
+
+    if (timeString.includes(":")) {
+      const parts = timeString.split(":").map(part => parseInt(part, 10));
+      if (parts.length === 2) {
+        minutes = parts[0];
+        seconds = parts[1];
+      } else if (parts.length === 3) {
+        hours = parts[0];
+        minutes = parts[1];
+        seconds = parts[2];
+      }
+    } else {
+      const time = parseInt(timeString, 10);
+      if (!isNaN(time)) {
+        if (time > 60) {
+          minutes = Math.floor(time / 60);
+          seconds = time % 60;
+        } else {
+          seconds = time;
+        }
+      }
+    }
+
+    const total = (seconds * 1000) + (minutes * 60 * 1000) + (hours * 60 * 60 * 1000);
+    this.remaining = total;
+
+    const hoursInput: HTMLInputElement = this.root.querySelector("input[name=hours]")!;
+    const minutesInput: HTMLInputElement = this.root.querySelector("input[name=minutes]")!;
+    const secondsInput: HTMLInputElement = this.root.querySelector("input[name=seconds]")!;
+
+    hoursInput.value = hours.toString();
+    minutesInput.value = minutes.toString();
+    secondsInput.value = seconds.toString();
+
+    this.updateDisplay(this.root.querySelector(".display")!, 0);
+
+    if (autoStart) {
+      this.startTimerLogic();
+    }
+
+    // Clear the hash from the URL
+    window.history.replaceState({}, document.title, window.location.pathname);
   }
 
   resetTimer (): void {
@@ -132,6 +197,47 @@ CustomElement.register(
   <button class="reset">Reset</button>
   <label><input type="checkbox" name="repeat" /> Repeat</label>
 </section>
+<style>
+  :host section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin: 0 auto; /* Center the section itself */
+    max-width: fit-content; /* Allow section to shrink to content size */
+  }
+
+  :host .timer {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  :host .timer input {
+    width: 3em;
+    font-size: 1.2em;
+  }
+
+  :host h1.display {
+    text-align: center;
+    font-size: 3em;
+  }
+
+  :host button {
+    margin-top: 5px;
+  }
+
+  @media (max-width: 600px) {
+    :host .timer input {
+      width: 4em;
+      font-size: 1.5em;
+    }
+
+    :host h1.display {
+      font-size: 2.5em;
+    }
+  }
+</style>
 `,
 );
 
