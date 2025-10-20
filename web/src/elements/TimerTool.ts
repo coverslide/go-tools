@@ -16,10 +16,6 @@ class TimerTool extends CustomElement {
     const stopBtn = this.root.querySelector("button.stop")!;
     const resetBtn = this.root.querySelector("button.reset")!;
 
-    const hoursInput: HTMLInputElement = this.root.querySelector("input[name=hours]")!;
-    const minutesInput: HTMLInputElement = this.root.querySelector("input[name=minutes]")!;
-    const secondsInput: HTMLInputElement = this.root.querySelector("input[name=seconds]")!;
-
     this.parseHash();
 
     startBtn.addEventListener("click", (_) => {
