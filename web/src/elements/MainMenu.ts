@@ -1,5 +1,5 @@
-import CustomElement from "@cover-slide/customelement";
-import { routeListener } from "../helpers/routeHelper";
+import CustomElement from "@coverslide/customelement";
+import { routeListener } from "@coverslide/customelement-router";
 
 class AppMenu extends CustomElement {
   connectedCallback (): void {

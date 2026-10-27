@@ -30,7 +30,8 @@
     "vite": "^7.1.9"
   },
   "dependencies": {
-    "@cover-slide/customelement": "^2.2.1",
+    "@coverslide/customelement": "^3.0.1",
+    "@coverslide/customelement-router": "^2.0.1",
     "@types/js-beautify": "^1.14.3",
     "@types/turndown": "^5.0.5",
     "jq-wasm": "^1.1.0-jq-1.8.1",

@@ -1,4 +1,4 @@
-import CustomElement from "@cover-slide/customelement";
+import CustomElement from "@coverslide/customelement";
 import "../style/error-row.css";
 
 class ErrorBox extends CustomElement {

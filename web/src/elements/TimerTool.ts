@@ -1,4 +1,4 @@
-import CustomElement from "@cover-slide/customelement";
+import CustomElement from "@coverslide/customelement";
 import bell from "../../assets/audio/bell.mp3";
 import blank from "../../assets/audio/blank.mp3";
 

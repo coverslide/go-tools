@@ -1,4 +1,4 @@
-import CustomElement from "@cover-slide/customelement";
+import CustomElement from "@coverslide/customelement";
 
 class Base64Tool extends CustomElement {
   connectedCallback (): void {

@@ -1,5 +1,5 @@
 
-import CustomElement from "@cover-slide/customelement";
+import CustomElement from "@coverslide/customelement";
 import { generateUuid, UuidVersion, extractTimestamp } from "../helpers/uuidHelper";
 
 class UuidGeneratorTool extends CustomElement {

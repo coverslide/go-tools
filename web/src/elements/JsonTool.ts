@@ -1,4 +1,4 @@
-import CustomElement from "@cover-slide/customelement";
+import CustomElement from "@coverslide/customelement";
 import { raw, json } from "jq-wasm";
 
 class JsonTool extends CustomElement {

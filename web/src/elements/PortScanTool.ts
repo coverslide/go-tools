@@ -1,4 +1,4 @@
-import CustomElement from "@cover-slide/customelement";
+import CustomElement from "@coverslide/customelement";
 import { type ProxyResponse } from "../types/response";
 
 class PortScanTool extends CustomElement {
